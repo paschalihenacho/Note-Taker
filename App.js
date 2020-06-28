@@ -29,7 +29,7 @@ app.post("/api/notes", (req, res) => {
     console.log("newNote:", newNote)
 
     // pushes new notes to notes.index
-    savedNotes.prepend(newNote);
+    savedNotes.push(newNote);
 
     // New notes to db.json
     fs.writeFileSync("./db/db.json", JSON.stringify(savedNotes), (err) => {
@@ -39,3 +39,31 @@ app.post("/api/notes", (req, res) => {
     console.log("A new note has been successfully written!");
 });
 
+app.delete("/api/notes/:id", (req, res) => {
+    let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+    let noteID = savedNotes.filter(x=>x.id!=req.params.id)
+
+    console.log("NOTE ID", noteID)
+    console.log("REQ.PARAMS.ID", req.params.id)
+
+    fs.writeFile("./db/db.json", JSON.stringify(noteID), (err) => {
+        if (err) throw err; 
+        res.json(savedNotes);
+        });
+        console.log("Note successfully deleted!");
+})
+
+// Page Routes
+app.get("/notes", (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/notes.html"));
+    console.log("notes")
+  });
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/public/index.html"));
+    console.log("html")
+  });
+
+  // Starts the server to begin listening
+app.listen(PORT, () => {
+    console.log('App listening on PORT: ' + PORT);
+  });
