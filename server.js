@@ -43,9 +43,6 @@ app.delete("/api/notes/:id", (req, res) => {
     let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
     let noteID = savedNotes.filter(x=>x.id!=req.params.id)
 
-    console.log("NOTE ID", noteID)
-    console.log("REQ.PARAMS.ID", req.params.id)
-
     fs.writeFile("./db/db.json", JSON.stringify(noteID), (err) => {
         if (err) throw err; 
         res.json(savedNotes);
@@ -60,11 +57,9 @@ app.get("/", function(req, res) {
 
 app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/notes.html"));
-    console.log("notes")
   });
   app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/index.html"));
-    console.log("html")
   });
 
   // Starts the server to begin listening
